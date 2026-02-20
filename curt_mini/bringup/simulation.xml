@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <!-- Robot State Publisher -->
+    <node pkg="robot_state_publisher"
+          exec="robot_state_publisher"
+          output="screen">
+        <param name="robot_description"
+               value="$(command 'xacro $(find-pkg-share curt_mini)/models/curt_mini/robot.urdf.xacro simulation:=True')"/>
+    </node>
+
+    <!-- Controller Manager -->
+    <node pkg="controller_manager"
+          exec="ros2_control_node"
+          output="screen">
+        <param from="$(find-pkg-share curt_mini)/config/ros2_control.yaml"/>
+    </node>
+
+    <!-- Joint state broadcaster -->
+    <node pkg="controller_manager"
+          exec="spawner"
+          args="joint_state_broadcaster"
+          output="screen"
+    />
+
+    <!-- RViz -->
+    <node pkg="rviz2"
+          exec="rviz2"
+          name="rviz2"
+          output="screen"
+          args="-d $(find-pkg-share curt_mini)/bringup/curt_mini.rviz"
+    />
+
+
+</launch>
