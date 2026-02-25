@@ -11,10 +11,13 @@
             pkg="ros_gz_sim"
             exec="create"
             output="screen"
-            args="-topic robot_description -name curt_mini">
-            <param name="use_sim_time" value="true"/>
-      </node>
+            args="-topic robot_description -z 0.25 -name curt_mini"/>
       </timer>
+
+      <node pkg="ros_gz_bridge"
+            exec="parameter_bridge"
+            output="screen"
+            args="--ros-args -p config_file:=$(find-pkg-share curt_mini)/config/gz_bridge.yaml"/>
 
       <!-- Robot State Publisher -->
       <node pkg="robot_state_publisher"
@@ -22,31 +25,28 @@
             output="screen">
             <param name="robot_description"
                   value="$(command 'xacro $(find-pkg-share curt_mini)/models/curt_mini/robot.urdf.xacro simulation:=True')"/>
-            <param name="use_sim_time" value="true"/>
       </node>
 
       <!-- Controller manager -->
       <node pkg="controller_manager"
             exec="spawner"
             output="screen"
-            args="--param-file $(find-pkg-share curt_mini)/config/ros2_control.yaml">
-            <param name="use_sim_time" value="true"/>
-      </node>
+            args="--param-file $(find-pkg-share curt_mini)/config/ros2_control_simulation.yaml
+                  joint_state_broadcaster"/>
 
       <node pkg="controller_manager"
             exec="spawner"
             output="screen"
-            args="--param-file $(find-pkg-share curt_mini)/config/ros2_control.yaml joint_state_broadcaster">
-            <param name="use_sim_time" value="true"/>
-      </node>
+            args="--param-file $(find-pkg-share curt_mini)/config/ros2_control_simulation.yaml
+                  --controller-ros-args -r diff_drive_controller/odom:=/odometry/wheel
+                  --controller-ros-args -r diff_drive_controller/cmd_vel:=/base_controller/cmd_vel
+                  diff_drive_controller"/>
 
       <!-- RViz -->
       <node pkg="rviz2"
             exec="rviz2"
             name="rviz2"
             output="screen"
-            args="-d $(find-pkg-share curt_mini)/bringup/curt_mini.rviz">
-            <param name="use_sim_time" value="true"/>
-      </node>
+            args="-d $(find-pkg-share curt_mini)/bringup/curt_mini.rviz"/>
 
 </launch>
