@@ -7,11 +7,11 @@
 
   <!-- LPResearch CANAL3 IMU -->
   <joint name="base_link_to_imu" type="fixed">
-    <parent link="base_link" />
-    <child link="imu_link" />
+    <parent link="$(arg prefix)base_link" />
+    <child link="$(arg prefix)imu_link" />
     <origin xyz="0.062 0.0 0.015" rpy="0.0 0.0 ${pi/2}"/>
   </joint>
-  <link name="imu_link">
+  <link name="$(arg prefix)imu_link">
     <inertial>
       <mass value="0.01"/>
       <inertia ixx="1e-6" ixy="0" ixz="0"
@@ -19,5 +19,14 @@
                izz="1e-6"/>
     </inertial>
   </link>
+
+  <!-- Lidar UTM-30LX-EW -->
+  <joint name="base_link_to_lidar" type="fixed">
+    <parent link="$(arg prefix)base_link" />
+    <child link="$(arg prefix)lidar_link" />
+    <origin xyz="-0.162 0.0 0.315" rpy="${pi/2} 0.0 ${pi/2}"/>
+  </joint>
+  <link name="$(arg prefix)lidar_link"/>
+
 
 </robot>
