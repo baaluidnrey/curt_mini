@@ -132,21 +132,30 @@ def launch_robot():
             {"frame_id": "imu_link"},
         ],
     )
+    
+    rviz = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="screen",
+        arguments=["-d", PathJoinSubstitution([robot_dir, "bringup", "curt_mini.rviz"])],
+    )
 
     return [
         state_publisher,
-        controller,
-        joystick,
-        twist_mux,
-        zero_twist,
-        # Skip hardware interfaces when running in simulation
-        GroupAction(
-            [
-                hardware_interface,
-                imu_lpresearch,
-            ],
-            condition=UnlessCondition(sim_configuration),
-        ),
+        rviz,
+        # controller,
+        # joystick,
+        # twist_mux,
+        # zero_twist,
+        # # Skip hardware interfaces when running in simulation
+        # GroupAction(
+        #     [
+        #         hardware_interface,
+        #         imu_lpresearch,
+        #     ],
+        #     condition=UnlessCondition(sim_configuration),
+        # ),
     ]
 
 

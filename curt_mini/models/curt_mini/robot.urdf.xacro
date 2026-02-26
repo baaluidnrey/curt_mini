@@ -6,6 +6,8 @@
   <xacro:arg name="use_sim_time" default="False" />
   <xacro:arg name="gazebo_controllers" default="$(arg path)/config/ros2_control_simulation.yaml" />
   <xacro:arg name="simulation" default="False" />
+  <xacro:arg name="prefix" default=""/>
+
   <!-- Import ros2_control -->
   <xacro:include filename="$(find curt_mini)/models/curt_mini/ros2_control.xacro" />
 
@@ -15,11 +17,11 @@
   <!-- Include sensors -->
   <xacro:include filename="$(find curt_mini)/models/curt_mini/sensors.xacro" />
 
-  <link name="base_link" />
+  <link name="$(arg prefix)base_link" />
 
   <!-- Chassis link at same position as base_link, as root is not allowed to have inertial
   information -->
-  <link name="chassis">
+  <link name="$(arg prefix)chassis">
     <inertial>
       <origin xyz="0.011876 0.003999 0.048645" rpy="0 0 0" />
       <mass value="9.0318" />
@@ -43,11 +45,11 @@
     </collision>
   </link>
   <joint name="base_to_chassis" type="fixed">
-    <parent link="base_link" />
-    <child link="chassis" />
+    <parent link="$(arg prefix)base_link" />
+    <child link="$(arg prefix)chassis" />
   </joint>
 
-  <link name="front_right_wheel">
+  <link name="$(arg prefix)front_right_wheel">
     <inertial>
       <origin xyz="-2.8086E-05 0.013016 2.8089E-05" rpy="0 0 0" />
       <mass value="0.61321" />
@@ -72,14 +74,14 @@
   </link>
   <joint name="front_right_motor" type="continuous">
     <origin xyz="0.25995 -0.258 -0.030204" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="front_right_wheel" />
+    <parent link="$(arg prefix)base_link" />
+    <child link="$(arg prefix)front_right_wheel" />
     <axis xyz="0 1 0" />
     <dynamics damping="1.0" />
     <limit effort="${max_effort}" velocity="${max_wheel_velocity}" />
   </joint>
 
-  <link name="front_left_wheel">
+  <link name="$(arg prefix)front_left_wheel">
     <inertial>
       <origin xyz="2.8086E-05 -0.013016 2.8089E-05" rpy="0 0 0" />
       <mass value="0.61321" />
@@ -104,14 +106,14 @@
   </link>
   <joint name="front_left_motor" type="continuous">
     <origin xyz="0.25995 0.258 -0.030204" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="front_left_wheel" />
+    <parent link="$(arg prefix)base_link" />
+    <child link="$(arg prefix)front_left_wheel" />
     <axis xyz="0 1 0" />
     <dynamics damping="1.0" />
     <limit effort="${max_effort}" velocity="${max_wheel_velocity}" />
   </joint>
 
-  <link name="back_right_wheel">
+  <link name="$(arg prefix)back_right_wheel">
     <inertial>
       <origin xyz="-2.8086E-05 0.013016 2.8089E-05" rpy="0 0 0" />
       <mass value="0.61321" />
@@ -136,14 +138,14 @@
   </link>
   <joint name="back_right_motor" type="continuous">
     <origin xyz="-0.26 -0.258 -0.022755" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="back_right_wheel" />
+    <parent link="$(arg prefix)base_link" />
+    <child link="$(arg prefix)back_right_wheel" />
     <axis xyz="0 1 0" />
     <dynamics damping="1.0" />
     <limit effort="${max_effort}" velocity="${max_wheel_velocity}" />
   </joint>
 
-  <link name="back_left_wheel">
+  <link name="$(arg prefix)back_left_wheel">
     <inertial>
       <origin xyz="2.8086E-05 -0.013016 2.8089E-05" rpy="0 0 0" />
       <mass value="0.61321" />
@@ -168,8 +170,8 @@
   </link>
   <joint name="back_left_motor" type="continuous">
     <origin xyz="-0.26 0.258 -0.022755" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="back_left_wheel" />
+    <parent link="$(arg prefix)base_link" />
+    <child link="$(arg prefix)back_left_wheel" />
     <axis xyz="0 1 0" />
     <dynamics damping="1.0" />
     <limit effort="${max_effort}" velocity="${max_wheel_velocity}" />

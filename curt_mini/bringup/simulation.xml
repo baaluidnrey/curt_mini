@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+      <!-- Gazebo -->
+      <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+            <arg name="gz_args" value="-r -v 1 $(find-pkg-share curt_mini)/models/curt_mini/worlds/world.sdf"/>
+      </include>
+
+      <timer period="2.0">
+      <node
+            pkg="ros_gz_sim"
+            exec="create"
+            output="screen"
+            args="-topic robot_description -z 0.25 -name curt_mini"/>
+      </timer>
+
+      <node pkg="ros_gz_bridge"
+            exec="parameter_bridge"
+            output="screen"
+            args="--ros-args -p config_file:=$(find-pkg-share curt_mini)/config/gz_bridge.yaml"/>
+
+      <!-- Robot State Publisher -->
+      <node pkg="robot_state_publisher"
+            exec="robot_state_publisher"
+            output="screen">
+            <param name="robot_description"
+                  value="$(command 'xacro $(find-pkg-share curt_mini)/models/curt_mini/robot.urdf.xacro simulation:=True')"/>
+      </node>
+
+      <!-- Controller manager -->
+      <node pkg="controller_manager"
+            exec="spawner"
+            output="screen"
+            args="--param-file $(find-pkg-share curt_mini)/config/ros2_control_simulation.yaml
+                  joint_state_broadcaster"/>
+
+      <node pkg="controller_manager"
+            exec="spawner"
+            output="screen"
+            args="--param-file $(find-pkg-share curt_mini)/config/ros2_control_simulation.yaml
+                  --controller-ros-args -r diff_drive_controller/odom:=/odometry/wheel
+                  --controller-ros-args -r diff_drive_controller/cmd_vel:=/base_controller/cmd_vel
+                  diff_drive_controller"/>
+
+      <!-- RViz -->
+      <node pkg="rviz2"
+            exec="rviz2"
+            name="rviz2"
+            output="screen"
+            args="-d $(find-pkg-share curt_mini)/bringup/curt_mini.rviz"/>
+
+      <!-- RQT -->
+      <node pkg="rqt_gui"
+            exec="rqt_gui"
+            name="rqt_gui"
+            output="screen"
+            args="--perspective-file $(find-pkg-share curt_mini)/bringup/curt_mini.perspective"/> 
+
+      <!-- PlotJuggler -->
+      <node pkg="plotjuggler"
+            exec="plotjuggler"
+            name="plotjuggler"
+            output="screen"
+            args="--layout $(find-pkg-share curt_mini)/bringup/plotjuggler.xml"/> 
+
+</launch>
