@@ -6,7 +6,7 @@
   <xacro:arg name="use_sim_time" default="False" />
   <xacro:arg name="gazebo_controllers" default="$(arg path)/config/ros2_control_simulation.yaml" />
   <xacro:arg name="simulation" default="False" />
-  <xacro:arg name="prefix" default="curt_mini/"/>
+  <xacro:arg name="prefix" default=""/>
 
   <!-- Import ros2_control -->
   <xacro:include filename="$(find curt_mini)/models/curt_mini/ros2_control.xacro" />
