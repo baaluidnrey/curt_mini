@@ -49,4 +49,18 @@
             output="screen"
             args="-d $(find-pkg-share curt_mini)/bringup/curt_mini.rviz"/>
 
+      <!-- RQT -->
+      <node pkg="rqt_gui"
+            exec="rqt_gui"
+            name="rqt_gui"
+            output="screen"
+            args="--perspective-file $(find-pkg-share curt_mini)/bringup/curt_mini.perspective"/> 
+
+      <!-- PlotJuggler -->
+      <node pkg="plotjuggler"
+            exec="plotjuggler"
+            name="plotjuggler"
+            output="screen"
+            args="--layout $(find-pkg-share curt_mini)/bringup/plotjuggler.xml"/> 
+
 </launch>
